@@ -3,7 +3,7 @@
 ## Sinopsys:
 &emsp;Small libs representing Bruce Schneier PONTIFEX(SOLITARE) crypto algorithm work<br>
 &emsp;Inspired by Nil Stivenson CRYPTONOMICON book<br>
-&emsp;This repository contains full functional cryptolib and some binary example builds with different optargs for encrypt or decrypt some text info<br>
+&emsp;This repository contains full functional cryptolib and some binary example builds with different optargs for encrypt or decrypt text data<br>
 
 ## Requires:
 &emsp;CMAKE >= 3.26<br>
