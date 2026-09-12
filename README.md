@@ -13,7 +13,7 @@
 &emsp;mkdir -p ./pontifex/build && cd ./pontifex<br>
 &emsp;git clone https://github.com/Dies1rae/pontifex_cipher_lib<br>
 &emsp;cd ./build<br>
-&emsp; cmake ../ && make -j<br>
+&emsp;cmake ../ && make -j<br>
 
 ## Run:
 &emsp;Usage: pontifexcmd [enc option] [in option] |text/file| [out option] |text/file| [key option] |text/file|<br>
