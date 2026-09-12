@@ -16,11 +16,11 @@
 &emsp; cmake ../ && make -j<br>
 
 ## Run:
-&emsp;Usage: pontifexcmd [enc option] [in option] <text/file> [out option] <text/file> [key option] <text/file><br>
-&emsp;"Examples:<br>
-&emsp;&emsp;pontifexcmd -e -i <ClearText arg> -o <stdout CipherText> -k <Key arg><br>
-&emsp;&emsp;pontifexcmd -e -I <ClearText filepath> -O <CipherText filepath> -K <Key filepath><br>
-&emsp;&emsp;pontifexcmd -d -i <CipherText arg> -o <stdout ClearText> -k <Key arg><br>
-&emsp;&emsp;pontifexcmd -d -I <CipherText filepath> -O <ClearText filepath> -K <Key filepath><br>
-&emsp;&emsp;pontifexcmd -g  -k <stdout new generated key><br>
-&emsp;&emsp;pontifexcmd -g  -K <Save new generated key to filepath><br>
+&emsp;Usage: pontifexcmd [enc option] [in option] |text/file| [out option] |text/file| [key option] |text/file|<br>
+&emsp;Examples:<br>
+&emsp;&emsp;pontifexcmd -e -i |ClearText arg| -o |stdout CipherText| -k |Key arg|<br>
+&emsp;&emsp;pontifexcmd -e -I |ClearText filepath| -O |CipherText filepath| -K |Key filepath|<br>
+&emsp;&emsp;pontifexcmd -d -i |CipherText arg| -o |stdout ClearText| -k |Key arg|<br>
+&emsp;&emsp;pontifexcmd -d -I |CipherText filepath| -O |ClearText filepath| -K |Key filepath|<br>
+&emsp;&emsp;pontifexcmd -g  -k |stdout new generated key|<br>
+&emsp;&emsp;pontifexcmd -g  -K |Save new generated key to filepath|<br>
