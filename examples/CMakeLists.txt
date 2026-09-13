@@ -34,6 +34,7 @@ add_executable(pontifexcmd ${SRC})
 
 TARGET_LINK_LIBRARIES( pontifexcmd
   ${LIBS}
+  stdc++fs
   )
 
 INSTALL(TARGETS pontifexcmd DESTINATION ${EXECUTABLE_OUTPUT_PATH})
