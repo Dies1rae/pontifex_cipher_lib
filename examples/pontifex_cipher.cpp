@@ -2,6 +2,7 @@
 #include <string>
 #include <vector>
 #include <filesystem>
+#include <fstream>
 
 #if defined(_WIN32) || defined(_WIN64)
 #include "win_getopt.h" 
@@ -59,7 +60,7 @@ static struct option long_options[] ={
 	{"gen", 	no_argument,       nullptr, 'g'},
 	{"in",      required_argument, nullptr, 'i'},
 	{"fin",     required_argument, nullptr, 'I'},
-    {"out",     required_argument, nullptr, 'o'},
+    {"out",     no_argument, 	   nullptr, 'o'},
     {"fout",    required_argument, nullptr, 'O'},
     {"key",     required_argument, nullptr, 'k'},
     {"fkey",    required_argument, nullptr, 'K'},
@@ -70,7 +71,10 @@ static struct option long_options[] ={
 
 static bool argPass(int argc, char* argv[]) {
     int opt = 0;
-    while ((opt = getopt_long(argc, argv, "?hedgi:I:o:O:k:K:", long_options, nullptr))) {
+	std::string key;
+	std::string cleartxt;
+	std::string enctxt;
+    while ((opt = getopt_long(argc, argv, "?hedgio:I:O:k:K:", long_options, nullptr))) {
         switch (opt) {
             case 'e': {
 				if(opt != 5) {
@@ -110,6 +114,37 @@ static bool argPass(int argc, char* argv[]) {
     }
     return argc;
 }
+
+bool isFileOk(const std::string& _path, const std::string& _filetype) {
+	fs::path tmp_path = _path;
+	if(_path.empty() || !fs::exists(_path) || tmp_path.extension() != _filetype) {
+		return false;
+	}
+	return true;
+}
+
+bool storeToFile(const std::string& data, const std::string& filename) {
+	std::ofstream out(filename,  std::ios::out | std::ios::binary);
+	if(out.good()) {
+		out << data;
+		out.close();
+		return true;
+	}
+	return false;
+}
+
+bool readFromFile(std::string& data, const std::string& filename) {
+	std::ifstream in(filename, std::ios::in | std::ios::binary);
+	data.clear();
+    if(in.good()) {
+		std::ostringstream ss;
+	 	ss << in.rdbuf();
+		in.close();
+		data = ss.str();
+    }
+    return !data.empty();
+}
+
 
 int main(int argc, char* argv[]) {   
     return argPass(argc, argv) ? 0 : -1;

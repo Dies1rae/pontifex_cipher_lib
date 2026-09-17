@@ -24,7 +24,11 @@ public:
     /** Old, closest to book encription key generator */
     void shuffleCardsEncriptionKey(void);
 
-    int* getEncriptionkey(void);
+    size_t getEncriptionkey(void);
 private:
-    
+	void generateKeyFlow(size_t size);
+
+	size_t _enc_key;
+	size_t _enc_data_size;
+	size_t _clear_data_size;
 };
