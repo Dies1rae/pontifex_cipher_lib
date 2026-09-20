@@ -62,7 +62,7 @@ static struct option long_options[] ={
 	{"fin",     required_argument, nullptr, 'I'},
     {"out",     no_argument, 	   nullptr, 'o'},
     {"fout",    required_argument, nullptr, 'O'},
-    {"key",     required_argument, nullptr, 'k'},
+    {"key",     no_argument, 	   nullptr, 'k'},
     {"fkey",    required_argument, nullptr, 'K'},
     {"sin",     no_argument,       nullptr, '?'},
     {"help",    no_argument,       nullptr, 'h'},
@@ -74,7 +74,8 @@ static bool argPass(int argc, char* argv[]) {
 	std::string key;
 	std::string cleartxt;
 	std::string enctxt;
-    while ((opt = getopt_long(argc, argv, "?hedgio:I:O:k:K:", long_options, nullptr))) {
+	ptfxcpr::PontifexCipher cypher;
+    while ((opt = getopt_long(argc, argv, "?hedgio:I:O:kK:", long_options, nullptr))) {
         switch (opt) {
             case 'e': {
 				if(opt != 5) {
@@ -93,12 +94,9 @@ static bool argPass(int argc, char* argv[]) {
                 break;
             }
 			case 'g' : {
-                if(opt != 3) {
-					printf("Argument error!\n");
-                    printUsing(argv[0]);
-                    return false;
-                }
-				break;
+				key = cypher.getEncriptionkey();
+				std::cout << "Encription key by def:\n" << key.c_str() << std::endl;	
+				return true;
 			}
             case 'h': {
                 printUsing(argv[0]);

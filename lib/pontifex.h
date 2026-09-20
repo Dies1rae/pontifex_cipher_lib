@@ -1,34 +1,51 @@
+#ifndef PONTIFEX_H
+#define PONTIFEX_H
+
+#include <cstdio>
+#include <cstdint>
 
 
+namespace ptfxcpr {
+    class PontifexCipher {
+    public:
+		/** Consts */
+		static inline const uint8_t KEYLENGTH = 54;
+        /** Ctors */
+        PontifexCipher(void);
+		
+		PontifexCipher(const char* key);
 
+        PontifexCipher(PontifexCipher&) = delete;
 
-class PontifexCipher {
-public:
-    /** Constructors */
-    PontifexCipher() = default;
+        PontifexCipher& operator=(PontifexCipher&) = delete;
 
-    PontifexCipher(PontifexCipher&) = delete;
+        ~PontifexCipher(void);
 
-    ~PontifexCipher();
-    
-    /** Main methods */
-    bool encryptMessage(const unsigned char* req, unsigned char* res);
+        /** Main methods */
+        bool encryptMessage(const unsigned char* req, unsigned char* res);
 
-    bool decryptMessage(const unsigned char* req, unsigned char* res);
-    
-    void setEncriptionKey( /** some encription keys args */ );
-    
-    /** Modern key generator, something like MT */
-    void generateEncryptionKey(void);
-    
-    /** Old, closest to book encription key generator */
-    void shuffleCardsEncriptionKey(void);
+        bool decryptMessage(const unsigned char* req, unsigned char* res);
 
-    size_t getEncriptionkey(void);
-private:
-	void generateKeyFlow(size_t size);
+        /** Key setter */
+        void setEncriptionKey(const char* key);
 
-	size_t _enc_key;
-	size_t _enc_data_size;
-	size_t _clear_data_size;
-};
+        /** Modern key generator, something like MT */
+        void generateEncryptionKey(void);
+
+        /** Old, closest to book encription key generator */
+        void shuffleCardsEncriptionKey(void);
+		
+		/** Key getter */
+        char* getEncriptionkey(void);
+    private:
+    	void generateKeyFlow(size_t size);
+
+		void initializeKeyCardDeck(void);
+
+    	char* _enc_key;
+    	size_t _enc_data_size;
+    	size_t _clear_data_size;
+    };
+} //ptfxcpr
+
+#endif
