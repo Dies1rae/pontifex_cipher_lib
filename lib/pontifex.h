@@ -22,9 +22,9 @@ namespace ptfxcpr {
         ~PontifexCipher(void);
 
         /** Main methods */
-        bool encryptMessage(const unsigned char* req, unsigned char* res);
+        bool encryptMessage(const unsigned char* req, unsigned char* res) const;
 
-        bool decryptMessage(const unsigned char* req, unsigned char* res);
+        bool decryptMessage(const unsigned char* req, unsigned char* res) const;
 
         /** Key setter */
         void setEncriptionKey(const char* key);
@@ -33,18 +33,24 @@ namespace ptfxcpr {
         void generateEncryptionKey(void);
 
         /** Old, closest to book encription key generator */
-        void shuffleCardsEncriptionKey(void);
+        char* shuffleCardsEncriptionKey(int shuffle_count = 10);
 		
 		/** Key getter */
-        char* getEncriptionkey(void);
+        char* getEncriptionkey(void) const;
     private:
     	void generateKeyFlow(size_t size);
 
 		void initializeKeyCardDeck(void);
 
+        static inline const char _JOKER_A = '#';
+
+        static inline const char _JOKER_B = '$';
+
+		size_t _enc_data_size;
+
+        size_t _clear_data_size;
+
     	char* _enc_key;
-    	size_t _enc_data_size;
-    	size_t _clear_data_size;
     };
 } //ptfxcpr
 

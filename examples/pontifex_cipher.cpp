@@ -13,7 +13,6 @@
 
 #include "pontifex.h"
 
-
 namespace fs = std::filesystem;
 
 
@@ -28,26 +27,19 @@ void printSinopsys(void) {
 }
 
 void printUsing(char* name) {
-    printf( "Usage: pontifexcmd [enc option] [in option] <text/file> [out option] <text/file> [key option] <text/file> \n" \
+    printf( "Usage: pontifexcmd [enc option] [in option] <text> [key option] <text> \n" \
             "Examples:\n" \
-            "  *  %s -e -i <ClearText arg> -o <stdout CipherText> -k <Key arg>\n" \
-            "  *  %s -e -I <ClearText filepath> -O <CipherText filepath> -K <Key filepath>\n" \
-            "  *  %s -d -i <CipherText arg> -o <stdout ClearText> -k <Key arg>\n" \
-            "  *  %s -d -I <CipherText filepath> -O <ClearText filepath> -K <Key filepath>\n" \
+            "  *  %s -e -i <ClearText arg>  -k <Key arg>\n" \
+            "  *  %s -d -i <CipherText arg> -k <Key arg>\n" \
             "  *  %s -g  -k <stdout new generated key>\n" \
-            "  *  %s -g  -K <Save new generated key to filepath>\n" \
-            , name, name, name, name, name, name \
+            , name, name, name \
     );
     printf("\nBasic options:\n"\
            " -e  --enc            Encrypt proccess\n"\
            " -d  --dec            Dencrypt proccess\n"\
            " -g  --gen            Generating new key proccess\n"\
            " -i  --in             Clear or Cipher text in arg based on e\\d key\n"\
-           " -I  --fin            Clear or Cipher text from filepath in arg based on e\\d key\n"\
-           " -o  --out            Clear or Cipher text in arg based on e\\d key\n"\
-           " -O  --fout           Clear or Cipher text from filepath in arg based on e\\d key\n"\
            " -k  --key            Key text from arg\n"\
-           " -K  --fkey           Key text from filepath in arg\n"\
 		   " -h  --help           Help and using examples\n"\
 		   " -?  		          Sinopsys, help and using examples\n"\
     );
@@ -59,11 +51,7 @@ static struct option long_options[] ={
 	{"dec", 	no_argument,       nullptr, 'd'},
 	{"gen", 	no_argument,       nullptr, 'g'},
 	{"in",      required_argument, nullptr, 'i'},
-	{"fin",     required_argument, nullptr, 'I'},
-    {"out",     no_argument, 	   nullptr, 'o'},
-    {"fout",    required_argument, nullptr, 'O'},
-    {"key",     no_argument, 	   nullptr, 'k'},
-    {"fkey",    required_argument, nullptr, 'K'},
+    {"key",     required_argument, nullptr, 'k'},
     {"sin",     no_argument,       nullptr, '?'},
     {"help",    no_argument,       nullptr, 'h'},
     {nullptr,   0,                 nullptr,  0 }
@@ -75,7 +63,7 @@ static bool argPass(int argc, char* argv[]) {
 	std::string cleartxt;
 	std::string enctxt;
 	ptfxcpr::PontifexCipher cypher;
-    while ((opt = getopt_long(argc, argv, "?hedgio:I:O:kK:", long_options, nullptr))) {
+    while ((opt = getopt_long(argc, argv, "?hedgi:k:", long_options, nullptr))) {
         switch (opt) {
             case 'e': {
 				if(opt != 5) {
@@ -94,8 +82,9 @@ static bool argPass(int argc, char* argv[]) {
                 break;
             }
 			case 'g' : {
+				cypher.generateEncryptionKey();
 				key = cypher.getEncriptionkey();
-				std::cout << "Encription key by def:\n" << key.c_str() << std::endl;	
+				std::cout << key.c_str() << std::endl;
 				return true;
 			}
             case 'h': {
