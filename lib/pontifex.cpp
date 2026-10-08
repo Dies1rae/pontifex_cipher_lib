@@ -7,12 +7,18 @@
 
 
 namespace ptfxcpr {
-    PontifexCipher::PontifexCipher() : _enc_data_size(0), _clear_data_size(0), _enc_key(new char[PontifexCipher::KEYLENGTH + 1]) {
+	const uint8_t PontifexCipher::KEYLENGTH = 54;
+
+    PontifexCipher::PontifexCipher() : _enc_data_size(0), _clear_data_size(0), _enc_key(new char[(size_t)PontifexCipher::KEYLENGTH + 1]) {
 		this->initializeKeyCardDeck();
     }
 	
-	PontifexCipher::PontifexCipher(const char* key) : _enc_data_size(0), _clear_data_size(0), _enc_key(new char[PontifexCipher::KEYLENGTH + 1]) {
-		std::strncpy(this->_enc_key, key, PontifexCipher::KEYLENGTH + 1);	
+	PontifexCipher::PontifexCipher(const char* key) : _enc_data_size(0), _clear_data_size(0), _enc_key(new char[(size_t)PontifexCipher::KEYLENGTH + 1]) {
+		if(strlen(key) != PontifexCipher::KEYLENGTH) {
+            exit(-1);
+		}
+		std::strcpy(this->_enc_key, key);	
+		this->_enc_key[PontifexCipher::KEYLENGTH] = '\0';
 	}
 
 	PontifexCipher::~PontifexCipher(void) {
@@ -21,8 +27,8 @@ namespace ptfxcpr {
 	}
 	
 	void PontifexCipher::initializeKeyCardDeck(void) {
-		if(this->_enc_key == NULL) {
-			this->_enc_key = new char[PontifexCipher::KEYLENGTH + 1];
+		if(!this->_enc_key) {
+			this->_enc_key = new char[(size_t)PontifexCipher::KEYLENGTH + 1];
 		}
 		for (size_t ptr = 0; ptr < PontifexCipher::KEYLENGTH; ++ ptr) { 
             if(ptr == 52) { 
@@ -75,7 +81,7 @@ namespace ptfxcpr {
 		size_t pos_jk_b = 0;
 		for (size_t ptr = 0; ptr < PontifexCipher::KEYLENGTH && !jk_plased; ++ptr) {
 			if(this->_enc_key[ptr] == this->_JOKER_A) {
-				if(ptr == PontifexCipher::KEYLENGTH - 1) {
+				if(ptr == (size_t)PontifexCipher::KEYLENGTH - 1) {
 					std::swap(this->_enc_key[ptr], this->_enc_key[1]);
 					pos_jk_a = 1;
 				} else {
@@ -86,10 +92,10 @@ namespace ptfxcpr {
 				continue;
 			}
             if(this->_enc_key[ptr] == this->_JOKER_B) {
-				if(ptr == PontifexCipher::KEYLENGTH - 1) {
+				if(ptr == (size_t)PontifexCipher::KEYLENGTH - 1) {
 					std::swap(this->_enc_key[ptr], this->_enc_key[2]);
 					pos_jk_b = 2;
-				} else if(ptr == PontifexCipher::KEYLENGTH - 2) {
+				} else if(ptr == (size_t)PontifexCipher::KEYLENGTH - 2) {
 					std::swap(this->_enc_key[ptr], this->_enc_key[1]);
 					pos_jk_b = 1;
 				} else {
@@ -101,5 +107,12 @@ namespace ptfxcpr {
             }
 		}
 	}
-
+	
+	void PontifexCipher::setEncriptionKey(const char* key) {
+        if(strlen(key) != PontifexCipher::KEYLENGTH) {
+            exit(-1);
+        }
+		std::strcpy(this->_enc_key, key);
+        this->_enc_key[PontifexCipher::KEYLENGTH] = '\0';
+	}
 }

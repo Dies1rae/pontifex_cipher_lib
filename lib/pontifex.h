@@ -9,7 +9,7 @@ namespace ptfxcpr {
     class PontifexCipher {
     public:
 		/** Consts */
-		static inline const uint8_t KEYLENGTH = 54;
+		static const uint8_t KEYLENGTH;
         /** Ctors */
         PontifexCipher(void);
 		
