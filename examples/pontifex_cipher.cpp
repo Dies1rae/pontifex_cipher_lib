@@ -16,11 +16,13 @@
 namespace fs = std::filesystem;
 
 
+bool run (bool is_enc, const std::string& data, const std::string& key, ptfxcpr::PontifexCipher& handler);
+
 void printSinopsys(void) {
     printf("\n");
     printf( "*  Pontifex library sinopsys:\n" \
             "*  Small libs representing Bruce Schneier PONTIFEX(SOLITARE) crypto algorithm work\n" \
-            "*  Inspired by NIl Stivenson CRYPTONOMICON book\n" \
+            "*  Inspired by Nil Stivenson CRYPTONOMICON book\n" \
             "*  This example build binary with different optargs for encrypt or decrypt some text info\n"\
     );
     printf("\n");
@@ -31,7 +33,7 @@ void printUsing(char* name) {
             "Examples:\n" \
             "  *  %s -e -i <ClearText arg>  -k <Key arg>\n" \
             "  *  %s -d -i <CipherText arg> -k <Key arg>\n" \
-            "  *  %s -g  -k <stdout new generated key>\n" \
+            "  *  %s -g    <stdout new generated key>\n" \
             , name, name, name \
     );
     printf("\nBasic options:\n"\
@@ -59,47 +61,82 @@ static struct option long_options[] ={
 
 static bool argPass(int argc, char* argv[]) {
     int opt = 0;
+	[[maybe_unused]]bool to_enc = false;
 	std::string key;
-	std::string cleartxt;
-	std::string enctxt;
+	std::string data;
 	ptfxcpr::PontifexCipher cypher;
     while ((opt = getopt_long(argc, argv, "?hedgi:k:", long_options, nullptr))) {
         switch (opt) {
             case 'e': {
-				if(opt != 5) {
-					printf("Argument error!\n");
-					printUsing(argv[0]);
-					return false;
-				}
-                break;
-            }
-            case 'd' : {
-                if(opt != 5) {
-					printf("Argument error!\n");
-                	printUsing(argv[0]);
+				if (argc != 6) {
+					std::cout << "Arguments error\n";
+					printSinopsys();
+                    printUsing(argv[0]);
                     return false;
-                }
+				}
+				to_enc = true;
                 break;
             }
-			case 'g' : {
+            case 'd': {
+                  if (argc != 6) {
+                      std::cout << "Arguments error\n";
+                      printSinopsys();
+                      printUsing(argv[0]);
+                      return false;
+                  }
+				to_enc = false;
+                break;
+            }
+			case 'g': {
 				cypher.generateEncryptionKey();
 				key = cypher.getEncriptionkey();
-				std::cout << key.c_str() << std::endl;
+				std::cout << "Generated key is: " << key.c_str() << std::endl;
 				return true;
+			}
+			case 'k': {
+				key = argv[5];
+				break;
+			}
+			case 'i': {
+				data = argv[3];
+				break;
 			}
             case 'h': {
                 printUsing(argv[0]);
                 return true;
             }
-            case '?':
-            default:{
-                printSinopsys();
-                printUsing(argv[0]);
-                return opt == '?' ? true : false;
+            case '?': 
+            default: {
+				if (opt == '?') {
+	                printSinopsys();
+                	printUsing(argv[0]); 
+					return true;
+				}
+				return run(to_enc, data, key, cypher);
             }
         }
     }
     return argc;
+}
+
+bool run (bool is_enc, const std::string& data, const std::string& key, ptfxcpr::PontifexCipher& handler) {
+	if (data.empty()) {
+		std::cout << "Error given data is empty, exiting";
+		return false;
+	}
+	if (key.empty()) {
+    	std::cout << "Error given data is empty, exiting";
+        return false;
+    }
+
+	std::cout << "Start to " << (is_enc ? "encrypt" : "decrypt") << " this data: " << data << " with key: " << key << std::endl;
+	handler.setEncriptionKey(key.c_str());
+	if (is_enc) {
+
+	} else {
+
+	}
+	return true;
 }
 
 bool isFileOk(const std::string& _path, const std::string& _filetype) {
