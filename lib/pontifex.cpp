@@ -75,23 +75,27 @@ namespace ptfxcpr {
 		if (size == 0) {
 			exit(-1);
 		}
+		//** TODO */
 		/** Joker placed on deck in work position */
 		bool jk_plased = false;
 		size_t pos_jk_a = 0;
 		size_t pos_jk_b = 0;
+		
+		//Jocker A and Jocker B placed(first 1 and 2)
 		for (size_t ptr = 0; ptr < PontifexCipher::KEYLENGTH && !jk_plased; ++ptr) {
-			if(this->_enc_key[ptr] == this->_JOKER_A) {
+			jk_plased = (pos_jk_a != 0) && (pos_jk_b != 0);
+			if(pos_jk_a == 0 && this->_enc_key[ptr] == this->_JOKER_A) {
 				if(ptr == (size_t)PontifexCipher::KEYLENGTH - 1) {
 					std::swap(this->_enc_key[ptr], this->_enc_key[1]);
 					pos_jk_a = 1;
 				} else {
 					std::swap(this->_enc_key[ptr], this->_enc_key[ptr + 1]);
-                      pos_jk_a = ptr + 1;
+                    pos_jk_a = ptr + 1;
 				}
-				jk_plased = pos_jk_a > 0 && pos_jk_b > 0 ? true : false;
+				ptr = 0;
 				continue;
 			}
-            if(this->_enc_key[ptr] == this->_JOKER_B) {
+            if(pos_jk_b == 0 && this->_enc_key[ptr] == this->_JOKER_B) {
 				if(ptr == (size_t)PontifexCipher::KEYLENGTH - 1) {
 					std::swap(this->_enc_key[ptr], this->_enc_key[2]);
 					pos_jk_b = 2;
@@ -102,7 +106,7 @@ namespace ptfxcpr {
 					std::swap(this->_enc_key[ptr], this->_enc_key[ptr + 2]);
 					pos_jk_b = ptr + 2;
 				}
-				jk_plased = pos_jk_a > 0 && pos_jk_b > 0 ? true : false;
+				ptr = 0;
 				continue;
             }
 		}
