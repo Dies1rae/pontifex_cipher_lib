@@ -27,7 +27,7 @@ namespace ptfxcpr {
         bool decryptMessage(const unsigned char* req, unsigned char* res) const;
 
         /** Key setter */
-        void setEncriptionKey(const char* key);
+        bool setEncriptionKey(const char* key);
 
         /** Modern key generator, something like MT */
         void generateEncryptionKey(void);

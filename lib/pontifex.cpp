@@ -30,7 +30,7 @@ namespace ptfxcpr {
 		if(!this->_enc_key) {
 			this->_enc_key = new char[(size_t)PontifexCipher::KEYLENGTH + 1];
 		}
-		for (size_t ptr = 0; ptr < PontifexCipher::KEYLENGTH; ++ ptr) { 
+		for (size_t ptr = 0; ptr < PontifexCipher::KEYLENGTH; ++ptr) { 
             if(ptr == 52) { 
 				/** Joker A */
                 this->_enc_key[ptr] = this->_JOKER_A;
@@ -41,7 +41,7 @@ namespace ptfxcpr {
                 this->_enc_key[ptr] = this->_JOKER_B;
                 continue;
             } 
-            this->_enc_key[ptr] = ptr + 48;
+            this->_enc_key[ptr] = ptr + 49;
         } 
 		this->_enc_key[PontifexCipher::KEYLENGTH] = '\0';
 	}
@@ -108,11 +108,37 @@ namespace ptfxcpr {
 		}
 	}
 	
-	void PontifexCipher::setEncriptionKey(const char* key) {
-        if(strlen(key) != PontifexCipher::KEYLENGTH) {
-            exit(-1);
+	bool PontifexCipher::setEncriptionKey(const char* key) {
+        if(!this->_enc_key || strlen(key) != PontifexCipher::KEYLENGTH - 1) {
+            return false;
         }
 		std::strcpy(this->_enc_key, key);
         this->_enc_key[PontifexCipher::KEYLENGTH] = '\0';
+		return true;
 	}
-}
+	
+    bool PontifexCipher::encryptMessage(const unsigned char* req, unsigned char* res) const {
+		if (!res) {
+			return false;
+		}
+		printf("DEBUGG Lower lib EncMes method data. Req: %s . Key: %s", req, this->_enc_key);
+
+		//**! TODO */
+		
+		return true;
+	}
+
+    bool PontifexCipher::decryptMessage(const unsigned char* req, unsigned char* res) const {
+        if (!res) {
+            return false;
+        }
+	    printf("DEBUGG Lower lib DecMes method data. Req: %s . Key: %s", req, this->_enc_key);
+		
+        //**! TODO */
+
+		return true;
+	}
+
+}    //namespace ptfxcpr
+
+

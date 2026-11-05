@@ -31,8 +31,8 @@ void printSinopsys(void) {
 void printUsing(char* name) {
     printf( "Usage: pontifexcmd [enc option] [in option] <text> [key option] <text> \n" \
             "Examples:\n" \
-            "  *  %s -e -i <ClearText arg>  -k <Key arg>\n" \
-            "  *  %s -d -i <CipherText arg> -k <Key arg>\n" \
+            "  *  %s -e -i <ClearText arg>  -k $'<Key arg>'\n" \
+            "  *  %s -d -i <CipherText arg> -k $'<Key arg>'\n" \
             "  *  %s -g    <stdout new generated key>\n" \
             , name, name, name \
     );
@@ -43,7 +43,7 @@ void printUsing(char* name) {
            " -i  --in             Clear or Cipher text in arg based on e\\d key\n"\
            " -k  --key            Key text from arg\n"\
 		   " -h  --help           Help and using examples\n"\
-		   " -?  		          Sinopsys, help and using examples\n"\
+		   " -?  		      Sinopsys, help and using examples\n"\
     );
     printf("\n");
 }
@@ -119,24 +119,26 @@ static bool argPass(int argc, char* argv[]) {
     return argc;
 }
 
-bool run (bool is_enc, const std::string& data, const std::string& key, ptfxcpr::PontifexCipher& handler) {
+bool run (bool to_enc, const std::string& data, const std::string& key, ptfxcpr::PontifexCipher& handler) {
 	if (data.empty()) {
-		std::cout << "Error given data is empty, exiting";
+		std::cout << "Error given data is empty, exiting\n";
 		return false;
 	}
 	if (key.empty()) {
-    	std::cout << "Error given data is empty, exiting";
+    	std::cout << "Error given data is empty, exiting\n";
         return false;
     }
 
-	std::cout << "Start to " << (is_enc ? "encrypt" : "decrypt") << " this data: " << data << " with key: " << key << std::endl;
-	handler.setEncriptionKey(key.c_str());
-	if (is_enc) {
-
-	} else {
-
+	std::cout << "Start to " << (to_enc ? "encrypt" : "decrypt") << " this data: " << data << " with key: " << key << std::endl;
+	if ( !handler.setEncriptionKey(key.c_str()) ) {
+		std::cout << "Set encryption key is faild, exitting\n";
+		return false;
 	}
-	return true;
+
+	std::string responsed(4096, '0');
+	const unsigned char * req_ptr = reinterpret_cast<const unsigned char*> (data.data());
+	unsigned char * res_ptr = reinterpret_cast<unsigned char*> (responsed.data());
+	return to_enc ? handler.encryptMessage(req_ptr, res_ptr) : handler.decryptMessage(req_ptr, res_ptr);
 }
 
 bool isFileOk(const std::string& _path, const std::string& _filetype) {
@@ -171,5 +173,9 @@ bool readFromFile(std::string& data, const std::string& filename) {
 
 
 int main(int argc, char* argv[]) {   
+	if (argc == 1) {
+		std::cout << "Error given data is empty, exiting\n";
+        return -1;
+	}
     return argPass(argc, argv) ? 0 : -1;
 }
